@@ -50,7 +50,7 @@ class PostDetailView(DetailView):
         comments = Comment.objects.filter(post=self.object)
         context['comments'] = comments
         context['can_delete'] = self.request.user.has_perm(
-            'news.delete_news') or self.request.user == self.object.author
+            'posts.delete_news') or self.request.user == self.object.author
         context['can_change'] = self.request.user.has_perm(
             'news.change_news') or self.request.user == self.object.author
 
