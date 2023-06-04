@@ -1,0 +1,10 @@
+<div class="card mt-3">
+    <div class="card-header">
+        {{ post.author }} - {{ post.posted_date|date:'F d, Y-H:i' }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.content|safe }}</p>
+        <a href="{% url 'posts:detail' pk=post.id %}" class="btn btn-primary">Read</a>
+    </div>
+</div>
