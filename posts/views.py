@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -42,7 +42,7 @@ class PostDetailView(DetailView):
     context_object_name = 'posts'
 
     def get_object(self, queryset=None):
-        return Posts.objects.get(id=self.kwargs['pk'], status=Posts.PostStatus.PUBLISHED)
+        return get_object_or_404(Posts, id=self.kwargs['pk'], status=Posts.PostStatus.PUBLISHED)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

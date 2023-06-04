@@ -112,14 +112,14 @@ class PostsDetailTest(TestCase):
         self.assertIsNotNone(resp.context['comment_form'])
 
 
-class postsCreateTest(TestCase):
+class PostsCreateTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create(email='testcreate@test.com', password='test_pass2', is_active=True)
-        posts = posts.objects.create(content='PUBLISHED posts by activated user',
+        posts = Posts.objects.create(content='PUBLISHED posts by activated user',
                                      title='test', author=user,
-                                     status='PUBLISHED')
+                                     status=Posts.PostStatus.PUBLISHED)
 
     def setUp(self):
         self.user = User.objects.get(id=1)
