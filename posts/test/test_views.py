@@ -71,36 +71,35 @@ class HomePageTest(TestCase):
 
 class PostsDetailTest(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
         activated_user = User.objects.create(email='test1@test.com', password='test_pass2', is_active=True)
 
-        published_posts = Posts.objects.create(content='PUBLISHED posts by activated user',
+        self.published_posts = Posts.objects.create(content='PUBLISHED posts by activated user',
                                                title='test', author=activated_user,
                                                status=Posts.PostStatus.PUBLISHED)
-        published_posts.save()
+        self.published_posts.save()
 
-        waiting_confirmation_published_posts = Posts.objects.create(
+        self.waiting_confirmation_published_posts = Posts.objects.create(
             content='PUBLISHED WAITING_CONFIRMATION posts by activated user',
             title='test', author=activated_user,
             status=Posts.PostStatus.WAITING_CONFIRMATION)
-        waiting_confirmation_published_posts.save()
+        self.waiting_confirmation_published_posts.save()
 
-        unpublished_posts = Posts.objects.create(content='PUBLISHED WAITING_CONFIRMATION posts by activated user',
+        self.unpublished_posts = Posts.objects.create(content='PUBLISHED WAITING_CONFIRMATION posts by activated user',
                                                  title='test', author=activated_user,
                                                  status=Posts.PostStatus.WAITING_CONFIRMATION)
-        unpublished_posts.save()
+        self.unpublished_posts.save()
 
     def test_detail_page_status_code(self):
-        resp = self.client.get('/posts/1/')
+        resp = self.client.get(reverse('posts:detail', kwargs={'pk': self.published_posts.id}))
         self.assertEquals(resp.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
-        resp = self.client.get(reverse('posts:detail', kwargs={'pk': 1}))
+        resp = self.client.get(reverse('posts:detail', kwargs={'pk': self.published_posts.id}))
         self.assertEquals(resp.status_code, 200)
 
     def test_views_uses_correct_template(self):
-        resp = self.client.get(reverse('posts:detail', kwargs={'pk': 1}))
+        resp = self.client.get(reverse('posts:detail', kwargs={'pk': self.published_posts.id}))
         self.assertTemplateUsed(resp, 'posts/post_detail.html')
 
     def test_view_on_nonexistent_posts(self):
@@ -108,21 +107,21 @@ class PostsDetailTest(TestCase):
         self.assertEquals(resp.status_code, 404)
 
     def test_comment_form_available(self):
-        resp = self.client.get(reverse('posts:detail', kwargs={'pk': 1}))
+        resp = self.client.get(reverse('posts:detail', kwargs={'pk': self.published_posts.id}))
         self.assertIsNotNone(resp.context['comment_form'])
 
 
 class PostsCreateTest(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
+
+
+
+    def setUp(self):
         user = User.objects.create(email='testcreate@test.com', password='test_pass2', is_active=True)
         posts = Posts.objects.create(content='PUBLISHED posts by activated user',
                                      title='test', author=user,
                                      status=Posts.PostStatus.PUBLISHED)
-
-    def setUp(self):
-        self.user = User.objects.get(id=1)
+        self.user = User.objects.get(id=user.id)
         self.client.force_login(self.user)
 
     def test_detail_page_status_code_by_authorized_user(self):
@@ -145,7 +144,6 @@ class PostsCreateTest(TestCase):
         self.client.logout()
         resp = self.client.post(reverse('posts:create'), {'title': 'test', 'content': 'testcontent'})
         self.assertRedirects(resp, '/accounts/login/?next=/posts/create/', status_code=302, target_status_code=404)
-
 
 
 class PostsDeleteTest(TestCase):
@@ -192,7 +190,6 @@ class PostsDeleteTest(TestCase):
         resp = self.client.post(reverse('posts:delete', kwargs={'pk': 1}))
         self.assertRedirects(resp, reverse('posts:main'))
 
-
     def test_delete_not_exiting_posts(self):
         self.client.force_login(self.admin_user)
         resp = self.client.post(reverse('posts:delete', kwargs={'pk': 999}))
@@ -207,9 +204,6 @@ class PostsUpdateTest(TestCase):
                                                     is_active=True)
         redactor_user = User.objects.create(email='redactor_user@test.com', password='test_pass2', is_active=True)
         admin_user = User.objects.create(email='admin_user@test.com', password='test_pass2', is_active=True)
-        post = Posts.objects.create(content='PUBLISHED posts by activated user',
-                                     title='test', author=user_with_publication,
-                                     status=Posts.PostStatus.PUBLISHED)
 
     def setUp(self):
         call_command('create_default_groups')
@@ -223,15 +217,19 @@ class PostsUpdateTest(TestCase):
         self.admin_user = User.objects.get(email='admin_user@test.com')
         self.admin_user.groups.add(Group.objects.get(name='admins'))
 
+        self.post = Posts.objects.create(content='PUBLISHED posts by activated user',
+                                         title='test', author=self.user_with_publication,
+                                         status=Posts.PostStatus.PUBLISHED)
+
     def test_update_from_not_authorized_user(self):
-        resp = self.client.post(reverse('posts:update', kwargs={'pk': 1}), {'title': 'updated_test_status',
-                                                                            'content': 'sdfsdfsdcscs'})
+        resp = self.client.post(reverse('posts:update', kwargs={'pk': self.post.id}), {'title': 'updated_test_status',
+                                                                                       'content': 'sdfsdfsdcscs'})
         self.assertEquals(resp.status_code, 403)
 
     def test_update_from_user_without_perm(self):
         self.client.force_login(self.redactor_user)
-        resp = self.client.post(reverse('posts:update', kwargs={'pk': 1}), {'title': 'updated_test_status',
-                                                                            'content': 'sdfsdfsdcscs'})
+        resp = self.client.post(reverse('posts:update', kwargs={'pk': self.post.id}), {'title': 'updated_test_status',
+                                                                                       'content': 'sdfsdfsdcscs'})
         self.assertEquals(resp.status_code, 403)
 
     def test_update_from_author(self):
