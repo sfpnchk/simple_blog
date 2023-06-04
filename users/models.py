@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     address = models.CharField(null=True, blank=True, max_length=255)
     website = models.CharField(null=True, blank=True, max_length=255)
-    user_name = models.CharField(max_length=30, unique=True)
+    user_name = models.CharField(max_length=30, unique=False)
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)

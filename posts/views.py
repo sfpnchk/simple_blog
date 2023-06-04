@@ -42,7 +42,7 @@ class PostDetailView(DetailView):
     context_object_name = 'posts'
 
     def get_object(self, queryset=None):
-        return Posts.objects.get(id=self.kwargs['pk'], status='published')
+        return Posts.objects.get(id=self.kwargs['pk'], status=Posts.PostStatus.PUBLISHED)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
