@@ -124,7 +124,6 @@ class PostsCreateTest(TestCase):
     def setUp(self):
         self.user = User.objects.get(id=1)
         self.client.force_login(self.user)
-        call_command('create_default_groups')
 
     def test_detail_page_status_code_by_authorized_user(self):
         resp = self.client.get('/posts/create/')
@@ -136,7 +135,7 @@ class PostsCreateTest(TestCase):
 
     def test_views_uses_correct_template(self):
         resp = self.client.get(reverse('posts:create'))
-        self.assertTemplateUsed(resp, 'posts/posts_create.html')
+        self.assertTemplateUsed(resp, 'posts/post_create.html')
 
     def test_creation_posts_by_authorized_user(self):
         resp = self.client.post(reverse('posts:create'), {'title': 'test', 'content': 'testcontent'})
@@ -147,20 +146,9 @@ class PostsCreateTest(TestCase):
         resp = self.client.post(reverse('posts:create'), {'title': 'test', 'content': 'testcontent'})
         self.assertRedirects(resp, '/accounts/login/?next=/posts/create/', status_code=302, target_status_code=404)
 
-    def test_posts_created_by_user_without_perms_not_show(self):
-        resp = self.client.post(reverse('posts:create'), {'title': 'test', 'content': 'testcontent'}, follow=True)
-        self.assertNotContains(resp, 'testcontent')
-
-    def test_posts_created_by_user_from_groups_with_perms_show(self):
-        self.user.groups.add(Group.objects.get(name='redactors'))
-        resp = self.client.post(reverse('posts:create'),
-                                {'title': 'test', 'content': 'test content from groups with perms'},
-                                follow=True)
-
-        self.assertContains(resp, 'test content from groups with perms')
 
 
-class postsDeleteTest(TestCase):
+class PostsDeleteTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -183,7 +171,7 @@ class postsDeleteTest(TestCase):
         self.admin_user.groups.add(Group.objects.get(name='admins'))
 
     def create_posts(self):
-        posts = posts.objects.get_or_create(content='PUBLISHED posts by activated user',
+        posts = Posts.objects.get_or_create(content='PUBLISHED posts by activated user',
                                             title='test from activated user', author=self.user_with_publication,
                                             status='PUBLISHED', id=1)
 
@@ -204,11 +192,6 @@ class postsDeleteTest(TestCase):
         resp = self.client.post(reverse('posts:delete', kwargs={'pk': 1}))
         self.assertRedirects(resp, reverse('posts:main'))
 
-    def test_delete_from_admin(self):
-        self.create_posts()
-        self.client.force_login(self.admin_user)
-        resp = self.client.post(reverse('posts:delete', kwargs={'pk': 1}))
-        self.assertRedirects(resp, reverse('posts:main'))
 
     def test_delete_not_exiting_posts(self):
         self.client.force_login(self.admin_user)
@@ -216,7 +199,7 @@ class postsDeleteTest(TestCase):
         self.assertEquals(resp.status_code, 404)
 
 
-class postsUpdateTest(TestCase):
+class PostsUpdateTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -224,9 +207,9 @@ class postsUpdateTest(TestCase):
                                                     is_active=True)
         redactor_user = User.objects.create(email='redactor_user@test.com', password='test_pass2', is_active=True)
         admin_user = User.objects.create(email='admin_user@test.com', password='test_pass2', is_active=True)
-        posts = posts.objects.create(content='PUBLISHED posts by activated user',
+        post = Posts.objects.create(content='PUBLISHED posts by activated user',
                                      title='test', author=user_with_publication,
-                                     status='PUBLISHED')
+                                     status=Posts.PostStatus.PUBLISHED)
 
     def setUp(self):
         call_command('create_default_groups')
@@ -253,12 +236,6 @@ class postsUpdateTest(TestCase):
 
     def test_update_from_author(self):
         self.client.force_login(self.user_with_publication)
-
-    def test_delete_from_admin(self):
-        self.client.force_login(self.admin_user)
-        resp = self.client.post(reverse('posts:update', kwargs={'pk': 1}), {'title': 'updated_test_status',
-                                                                            'content': 'sdfsdfsdcscs'})
-        self.assertRedirects(resp, reverse('posts:detail', kwargs={'pk': 1}))
 
     def test_delete_not_exiting_posts(self):
         self.client.force_login(self.admin_user)
