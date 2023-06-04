@@ -9,12 +9,12 @@ class PostAdmin(admin.ModelAdmin):
     actions = ('publish', 'unpublish')
 
     def publish(self, request, queryset):
-        queryset.update(status='published')
+        queryset.update(status=Posts.PostStatus.PUBLISHED)
 
     publish.short_description = "Publish Selected"
 
     def unpublish(self, request, queryset):
-        queryset.update(status='UNPUBLISHED')
+        queryset.update(status=Posts.PostStatus.UNPUBLISHED)
 
     unpublish.short_description = "Unpublish Selected"
 

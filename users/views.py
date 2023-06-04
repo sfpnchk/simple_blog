@@ -1,9 +1,10 @@
 from django.contrib.auth import views
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView
+from django.urls import reverse
+from django.views.generic import CreateView, UpdateView
 
-from .forms import LoginForm
+from .forms import LoginForm, ProfileEditForm
 from .forms import SignUpForm
 from .models import User
 
@@ -16,9 +17,7 @@ class SignUp(CreateView):
 
     def form_valid(self, form):
         valid = super(SignUp, self).form_valid(form)
-        user = form.save()
-        scheme = self.request.scheme
-        domain = get_current_site(self.request).domain
+        form.save()
         return valid
 
 
@@ -29,4 +28,13 @@ class LoginView(views.LoginView):
 
 class LogoutView(views.LogoutView):
     success_url = '/'
+
+
+class ProfileUpdateView(UpdateView):
+    model = User
+    form_class = ProfileEditForm
+    template_name = 'users/profile_edit.html'
+
+    def get_success_url(self):
+        return reverse('posts:main')
 
