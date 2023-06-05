@@ -5,20 +5,32 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
-    dependencies = [
-        ('posts', '0001_initial'),
-    ]
+    dependencies = [("posts", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='comment',
-            name='post',
-            field=models.ForeignKey(help_text='Link to posts', on_delete=django.db.models.deletion.CASCADE, to='posts.posts', verbose_name='Post'),
+            model_name="comment",
+            name="post",
+            field=models.ForeignKey(
+                help_text="Link to posts",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="posts.posts",
+                verbose_name="Post",
+            ),
         ),
         migrations.AlterField(
-            model_name='posts',
-            name='status',
-            field=models.CharField(choices=[('unpublished', 'unpublished'), ('published', 'published'), ('waiting_confirmation', 'waiting_confirmation')], default='published', help_text='This is status of news publication', max_length=20, verbose_name='Confirmation status'),
+            model_name="posts",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("unpublished", "unpublished"),
+                    ("published", "published"),
+                    ("waiting_confirmation", "waiting_confirmation"),
+                ],
+                default="published",
+                help_text="This is status of news publication",
+                max_length=20,
+                verbose_name="Confirmation status",
+            ),
         ),
     ]

@@ -7,38 +7,119 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='Posts',
+            name="Posts",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Use short roomy title', max_length=30, verbose_name='Title')),
-                ('content', ckeditor.fields.RichTextField(help_text='Insert your news here', verbose_name='News content')),
-                ('posted_date', models.DateTimeField(auto_now_add=True, help_text='Date of posted', verbose_name='Posted date')),
-                ('status', models.CharField(choices=[('unpublished', 'unpublished'), ('published', 'published'), ('waiting_confirmation', 'waiting_confirmation')], default='waiting_confirmation', help_text='This is status of news publication', max_length=20, verbose_name='Confirmation status')),
-                ('author', models.ForeignKey(help_text='Link to author', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Author')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="Use short roomy title",
+                        max_length=30,
+                        verbose_name="Title",
+                    ),
+                ),
+                (
+                    "content",
+                    ckeditor.fields.RichTextField(
+                        help_text="Insert your news here", verbose_name="News content"
+                    ),
+                ),
+                (
+                    "posted_date",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="Date of posted",
+                        verbose_name="Posted date",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("unpublished", "unpublished"),
+                            ("published", "published"),
+                            ("waiting_confirmation", "waiting_confirmation"),
+                        ],
+                        default="waiting_confirmation",
+                        help_text="This is status of news publication",
+                        max_length=20,
+                        verbose_name="Confirmation status",
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        help_text="Link to author",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Author",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'posts',
-                'verbose_name_plural': 'posts',
-                'permissions': [('publish', 'can_publish_without_moderation')],
+                "verbose_name": "posts",
+                "verbose_name_plural": "posts",
+                "permissions": [("publish", "can_publish_without_moderation")],
             },
         ),
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.CharField(help_text='Comment text', max_length=100, verbose_name='Content')),
-                ('posted_date', models.DateTimeField(auto_now_add=True, help_text='Date of posted', verbose_name='Posted date')),
-                ('author', models.ForeignKey(help_text='Link to author', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Author')),
-                ('post', models.ForeignKey(help_text='Link to news', on_delete=django.db.models.deletion.CASCADE, to='posts.posts', verbose_name='News')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "text",
+                    models.CharField(
+                        help_text="Comment text", max_length=100, verbose_name="Content"
+                    ),
+                ),
+                (
+                    "posted_date",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="Date of posted",
+                        verbose_name="Posted date",
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        help_text="Link to author",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Author",
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        help_text="Link to news",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="posts.posts",
+                        verbose_name="News",
+                    ),
+                ),
             ],
         ),
     ]
