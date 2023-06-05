@@ -43,7 +43,7 @@ jobs:
     - name: Run black
       run: black --check -t py38 -C posts/ simple_blog/ users/ manage.py
     - name: Run mypy
-        mypy posts/ simple_blog/ users/ manage.py
+      run: mypy posts/ simple_blog/ users/ manage.py
     - name: Run migrations
       run: python manage.py migrate
     - name: Run Tests
