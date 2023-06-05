@@ -4,10 +4,9 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-
     def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
         now = datetime.now()
         email = self.normalize_email(email)
         user = self.model(
@@ -16,7 +15,7 @@ class UserManager(BaseUserManager):
             is_active=True,
             is_superuser=is_superuser,
             last_login=now,
-            **extra_fields
+            **extra_fields,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -28,4 +27,3 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         user = self._create_user(email, password, True, True, **extra_fields)
         return user
-

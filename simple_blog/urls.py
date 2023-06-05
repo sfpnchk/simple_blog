@@ -19,8 +19,8 @@ from django.urls import path, include
 from posts.views import PostListView
 
 urlpatterns = [
-    path('posts/', include('posts.urls', namespace='posts')),
-    path('user/', include('users.urls', namespace='user')),
-    path('admin/', admin.site.urls),
-    path('', PostListView.as_view()),
+    path("posts/", include("posts.urls", namespace="posts")),
+    path("user/", include("users.urls", namespace="user")),
+    path("admin/", admin.site.urls),
+    path("", PostListView.as_view()),
 ]

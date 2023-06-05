@@ -8,20 +8,27 @@ from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
 
 PERMISSION_GROUPS = [
-    ('users', []),
-    ('redactors', ['publish']),
-    ('admins', [
-        'add_news', 'change_news',
-        'delete_news', 'view_news',
-        'add_comment', 'change_comment',
-        'delete_comment', 'view_comment',
-        'publish'
-    ])
+    ("users", []),
+    ("redactors", ["publish"]),
+    (
+        "admins",
+        [
+            "add_news",
+            "change_news",
+            "delete_news",
+            "view_news",
+            "add_comment",
+            "change_comment",
+            "delete_comment",
+            "view_comment",
+            "publish",
+        ],
+    ),
 ]
 
 
 class Command(BaseCommand):
-    help = 'Creates the necessary groups with the appropriate permissions'
+    help = "Creates the necessary groups with the appropriate permissions"
 
     def handle(self, *args, **options):
         for group, permissions in PERMISSION_GROUPS:

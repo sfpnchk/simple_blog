@@ -1,0 +1,13 @@
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "simple_blog.settings"
+
+[[tool.mypy.overrides]]
+module = "ckeditor.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true

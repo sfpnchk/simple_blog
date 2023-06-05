@@ -4,9 +4,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("users", "0002_user_address_user_age_user_gender_user_website_and_more"),
+        ("users", "0002_user_address_user_age_user_gender_user_website_and_more")
     ]
 
     operations = [
@@ -15,5 +14,5 @@ class Migration(migrations.Migration):
             name="user_name",
             field=models.CharField(default="def", max_length=30, unique=True),
             preserve_default=False,
-        ),
+        )
     ]

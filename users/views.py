@@ -11,9 +11,9 @@ from .models import User
 
 class SignUp(CreateView):
     model = User
-    template_name = 'users/signup.html'
+    template_name = "users/signup.html"
     form_class = SignUpForm
-    success_url = '/'
+    success_url = "/"
 
     def form_valid(self, form):
         valid = super(SignUp, self).form_valid(form)
@@ -22,19 +22,18 @@ class SignUp(CreateView):
 
 
 class LoginView(views.LoginView):
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
     form_class = LoginForm
 
 
 class LogoutView(views.LogoutView):
-    success_url = '/'
+    success_url = "/"
 
 
 class ProfileUpdateView(UpdateView):
     model = User
     form_class = ProfileEditForm
-    template_name = 'users/profile_edit.html'
+    template_name = "users/profile_edit.html"
 
     def get_success_url(self):
-        return reverse('posts:main')
-
+        return reverse("posts:main")
