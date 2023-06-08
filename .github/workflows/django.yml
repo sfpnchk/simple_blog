@@ -44,8 +44,11 @@ jobs:
       run: black --check -t py38 -C posts/ simple_blog/ users/ manage.py
     - name: Run mypy
       run: mypy posts/ simple_blog/ users/ manage.py
+    - name: Run bandit
+      run: bandit -r manage.py simple_blog/ users/  posts/ -x *test_*.py
     - name: Run migrations
       run: python manage.py migrate
     - name: Run Tests
       run: |
         python manage.py test
+    
